@@ -1,6 +1,6 @@
 const request = require('../utils/request');
 
-function registerFace(filePath) {
+function uploadFace(filePath) {
     return new Promise((resolve, reject) => {
         const token = wx.getStorageSync('token');
         const header = {};
@@ -9,7 +9,7 @@ function registerFace(filePath) {
         }
 
         wx.uploadFile({
-            url: `${request.BASE_URL}/user/face/register`,
+            url: `${request.BASE_URL}/upload`,
             filePath,
             name: 'file',
             header,
@@ -18,46 +18,57 @@ function registerFace(filePath) {
                 try {
                     data = JSON.parse(res.data || '{}');
                 } catch (e) {
-                    reject(new Error('人脸录入响应解析失败'));
+                    reject(new Error('上传解析失败'));
                     return;
                 }
 
                 if (res.statusCode >= 200 && res.statusCode < 300 && data.code === 200) {
-                    resolve(data.data);
+                    const url = data?.data?.url || data?.url;
+                    if (!url) {
+                        reject(new Error('上传成功但未返回图片地址'));
+                        return;
+                    }
+                    resolve(url);
                     return;
                 }
-
-                if (data.code === 401 || res.statusCode === 401) {
-                    wx.removeStorageSync('token');
-                    wx.redirectTo({ url: '/pages/auth/login' });
-                }
-                reject(new Error(data.msg || '人脸录入失败'));
+                reject(new Error(data.msg || '上传失败'));
             },
-            fail: (err) => reject(err || new Error('人脸录入失败'))
+            fail: reject
         });
+    });
+}
+
+async function registerFace(filePath) {
+    const faceImageUrl = await uploadFace(filePath);
+    return request({
+        url: '/users/me/face',
+        method: 'POST',
+        data: {
+            face_image_url: faceImageUrl
+        }
     });
 }
 
 module.exports = {
     getUserInfo() {
         return request({
-            url: '/user/info',
+            url: '/users/me',
             method: 'GET'
         });
     },
 
     updateUserInfo(data) {
         return request({
-            url: '/user/update',
-            method: 'POST',
+            url: '/users/me',
+            method: 'PUT',
             data
         });
     },
 
     changePassword(data) {
         return request({
-            url: '/user/change_password',
-            method: 'POST',
+            url: '/users/me/password',
+            method: 'PUT',
             data
         });
     },

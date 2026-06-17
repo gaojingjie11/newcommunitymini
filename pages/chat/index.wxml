@@ -10,13 +10,68 @@
         <view id="msg-{{index}}" class="message-item {{item.role}}">
           <view class="avatar">{{item.role === 'user' ? '我' : (item.role === 'assistant' ? 'AI' : '!')}}</view>
           <view class="content-wrap">
-            <view class="bubble">{{item.content}}</view>
+            <!-- Normal Chat Content -->
+            <view class="bubble" wx:if="{{item.content}}">{{item.content}}</view>
+
+            <!-- Tool Status Processing -->
+            <view class="tool-status-bubble" wx:if="{{item.tool_status}}">
+              <view class="loading-dots"></view>
+              <text>{{item.tool_status}}</text>
+            </view>
+
+            <!-- Proposed Action Card -->
+            <view class="action-card" wx:if="{{item.proposed_action}}">
+              <view class="action-card-header">
+                <text class="action-card-title">⚠️ 操作授权确认</text>
+              </view>
+              <view class="action-card-body">
+                <!-- Create Order Details -->
+                <view class="action-detail-item" wx:if="{{item.proposed_action.action_type === 'create_order'}}">
+                  <view class="detail-row"><text class="label">意图：</text><text class="value">生成商城订单</text></view>
+                  <view class="detail-row"><text class="label">商品 ID：</text><text class="value">{{item.proposed_action.payload.product_id}}</text></view>
+                  <view class="detail-row"><text class="label">购买数量：</text><text class="value">{{item.proposed_action.payload.quantity}}</text></view>
+                </view>
+
+                <!-- Pay Order Details -->
+                <view class="action-detail-item" wx:elif="{{item.proposed_action.action_type === 'pay_order'}}">
+                  <view class="detail-row"><text class="label">意图：</text><text class="value">支付商城订单</text></view>
+                  <view class="detail-row"><text class="label">订单号：</text><text class="value">{{item.proposed_action.payload.order_id}}</text></view>
+                </view>
+
+                <!-- Submit Repair Details -->
+                <view class="action-detail-item" wx:elif="{{item.proposed_action.action_type === 'submit_repair'}}">
+                  <view class="detail-row"><text class="label">意图：</text><text class="value">提交报修/投诉</text></view>
+                  <view class="detail-row"><text class="label">类型：</text><text class="value">{{item.proposed_action.payload.type === 'repair' ? '报修' : '投诉'}}</text></view>
+                  <view class="detail-row"><text class="label">分类：</text><text class="value">{{item.proposed_action.payload.category}}</text></view>
+                  <view class="detail-row"><text class="label">描述：</text><text class="value">{{item.proposed_action.payload.description}}</text></view>
+                </view>
+              </view>
+
+              <!-- Action Confirmation Buttons -->
+              <view class="action-card-footer" wx:if="{{!item.action_resolved}}">
+                <button class="action-btn approve-btn" bindtap="handleApprove" data-index="{{index}}" disabled="{{item.action_submitting}}">授权同意</button>
+                <button class="action-btn reject-btn" bindtap="handleReject" data-index="{{index}}" disabled="{{item.action_submitting}}">拒绝</button>
+              </view>
+
+              <!-- Resolved Status -->
+              <view class="action-card-resolved" wx:else>
+                <view class="resolved-status {{item.action_resolved}}">
+                  <text wx:if="{{item.action_resolved === 'approved'}}">✓ 已授权同意</text>
+                  <text wx:else>✗ 已拒绝操作</text>
+                </view>
+                <!-- Pay button after order created -->
+                <view class="post-action-pay" wx:if="{{item.action_resolved === 'approved' && item.proposed_action.action_type === 'create_order' && item.result_payload.order_id}}">
+                  <button class="btn btn-warning pay-now-btn" bindtap="goToPay" data-orderid="{{item.result_payload.order_id}}">去支付订单</button>
+                </view>
+              </view>
+            </view>
+
             <view class="time">{{item.time}}</view>
           </view>
         </view>
       </block>
 
-      <view wx:if="{{loading}}" class="message-item assistant">
+      <view wx:if="{{loading && !messages[messages.length-1].tool_status}}" class="message-item assistant">
         <view class="avatar">AI</view>
         <view class="content-wrap">
           <view class="bubble">正在思考中...</view>

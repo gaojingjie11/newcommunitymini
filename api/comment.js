@@ -4,7 +4,7 @@ module.exports = {
     // 获取评论列表
     getCommentList(params) {
         return request({
-            url: '/comments',
+            url: '/mall/comments',
             method: 'GET',
             data: params
         });
@@ -13,7 +13,7 @@ module.exports = {
     // 发表评论
     createComment(data) {
         return request({
-            url: '/comment/create',
+            url: '/mall/comments',
             method: 'POST',
             data
         });

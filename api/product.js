@@ -4,7 +4,7 @@ module.exports = {
     // 获取商品列表
     getProductList(params) {
         return request({
-            url: '/products',
+            url: '/mall/products',
             method: 'GET',
             data: params
         });
@@ -13,7 +13,7 @@ module.exports = {
     // 获取商品详情
     getProductDetail(id) {
         return request({
-            url: `/product/${id}`,
+            url: `/mall/products/${id}`,
             method: 'GET'
         });
     },
@@ -21,7 +21,7 @@ module.exports = {
     // 添加收藏
     addFavorite(productId) {
         return request({
-            url: '/favorite/add',
+            url: '/mall/favorites',
             method: 'POST',
             data: { product_id: productId }
         });
@@ -30,16 +30,15 @@ module.exports = {
     // 取消收藏
     removeFavorite(productId) {
         return request({
-            url: '/favorite/delete',
-            method: 'POST',
-            data: { product_id: productId }
+            url: `/mall/favorites/${productId}`,
+            method: 'DELETE'
         });
     },
 
     // 获取收藏列表
     getFavoriteList() {
         return request({
-            url: '/favorites',
+            url: '/mall/favorites',
             method: 'GET'
         });
     },
@@ -47,16 +46,15 @@ module.exports = {
     // 检查是否收藏
     checkFavorite(productId) {
         return request({
-            url: '/favorite/check',
-            method: 'GET',
-            data: { product_id: productId }
+            url: `/mall/favorites/check/${productId}`,
+            method: 'GET'
         });
     },
 
     // 获取分类列表
     getCategories() {
         return request({
-            url: '/categories',
+            url: '/mall/categories',
             method: 'GET'
         });
     }

@@ -1,23 +1,23 @@
 {
   "compileType": "miniprogram",
-  "libVersion": "trial",
+  "libVersion": "3.13.1",
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "source_repo"
+        "value": "source_repo",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "_web_ref"
+        "value": "_web_ref",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": ".git"
+        "value": ".git",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": ".gitignore"
+        "value": ".gitignore",
+        "type": "file"
       }
     ],
     "include": []

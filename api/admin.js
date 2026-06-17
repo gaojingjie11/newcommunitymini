@@ -3,7 +3,7 @@ const request = require('../utils/request');
 module.exports = {
     getAIReportList(params) {
         return request({
-            url: '/admin/ai-report/list',
+            url: '/statistics/ai-report/list',
             method: 'GET',
             data: params
         });
@@ -11,7 +11,7 @@ module.exports = {
 
     generateAIReport() {
         return request({
-            url: '/admin/ai-report/generate',
+            url: '/statistics/ai-report/generate',
             method: 'POST',
             timeout: 120000
         });
@@ -19,7 +19,7 @@ module.exports = {
 
     getAIReportDetail(id) {
         return request({
-            url: `/admin/ai-report/${id}`,
+            url: `/statistics/ai-report/${id}`,
             method: 'GET'
         });
     }
