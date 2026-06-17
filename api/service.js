@@ -87,6 +87,8 @@ module.exports = {
         return request({
             url: '/community/parking-spaces/my',
             method: 'GET'
+        }).then(res => {
+            return res?.list || res || [];
         });
     },
 
