@@ -92,8 +92,8 @@ Page({
                 content: (item && item.content) || '',
                 created_at: item.created_at,
                 timeText: formatChatTime(item.created_at),
-                avatar: user.avatar || DEFAULT_AVATAR,
-                username: user.username || '用户',
+                avatar: item.avatar || user.avatar || DEFAULT_AVATAR,
+                username: item.username || user.username || '用户',
                 isSelf: currentUserId > 0 && uid === currentUserId,
                 viewId: `msg-${index}`
             };
