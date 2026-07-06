@@ -66,9 +66,10 @@ Page({
         try {
             await createVisitor({
                 visitor_name: name,
-                visitor_phone: mobile, // Correct key per SecurityHandler
-                visit_time: formattedTime,
-                reason
+                visitor_phone: mobile,
+                visit_purpose: reason,
+                release_time: formattedTime,
+                valid_date: formattedTime.split(' ')[0]
             });
             wx.showToast({ title: '登记成功', icon: 'success' });
             // Reset form
@@ -99,13 +100,15 @@ Page({
             // Format dates
             const { formatTime } = require('../../utils/util');
             list = list.map(item => {
-                const date = new Date(item.visit_time);
+                const dateStr = item.release_time || item.visit_time || '';
+                const date = new Date(dateStr);
                 const isValid = !isNaN(date.getTime()) && date.getFullYear() > 2000;
                 return {
                     ...item,
                     visit_time: isValid ? formatTime(date) : '',
-                    visitor_mobile: item.mobile || item.visitor_phone || item.visitor_mobile, // Ensure mobile shows
-                    visitor_name: item.name || item.visitor_name // Ensure name shows (model uses 'name')
+                    visitor_mobile: item.visitor_phone || item.visitor_mobile || item.mobile || '',
+                    visitor_name: item.visitor_name || item.name || '',
+                    reason: item.visit_purpose || item.reason || ''
                 };
             });
 
