@@ -226,15 +226,17 @@ Page({
     async fetchDetail(id) {
         this.setData({ loading: true });
         try {
-            const res = await getAIReportDetail(id);
+            const resp = await getAIReportDetail(id);
+            const reportInfo = resp.report || resp || {};
+            const markdown = reportInfo.report_markdown || reportInfo.report || '';
             this.setData({
                 report: {
-                    ...res,
-                    created_at_text: formatDateTime(res.created_at),
-                    property_paid_amount_text: formatAmount(res.property_paid_amount)
+                    ...reportInfo,
+                    created_at_text: formatDateTime(reportInfo.created_at),
+                    property_paid_amount_text: formatAmount(reportInfo.property_paid_amount)
                 },
-                reportText: res.report || '',
-                reportHtml: markdownToHtml(res.report || '')
+                reportText: markdown,
+                reportHtml: markdownToHtml(markdown)
             });
         } catch (e) {
             console.error(e);
