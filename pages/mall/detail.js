@@ -59,10 +59,18 @@ Page({
                 page: this.data.page,
                 size: this.data.size
             });
-            const list = (res.list || res || []).map((item) => ({
-                ...item,
-                created_at_text: formatCommentTime(item.created_at)
-            }));
+            const list = (res.list || res || []).map((item) => {
+                const userObj = item.user || {
+                    avatar: item.avatar,
+                    username: item.username,
+                    real_name: item.real_name || item.username
+                };
+                return {
+                    ...item,
+                    user: userObj,
+                    created_at_text: formatCommentTime(item.created_at)
+                };
+            });
             this.setData({ comments: list });
         } catch (e) {
             console.error(e);
