@@ -56,6 +56,8 @@ module.exports = {
         return request({
             url: '/mall/categories',
             method: 'GET'
+        }).then(res => {
+            return res?.list || res || [];
         });
     }
 };
