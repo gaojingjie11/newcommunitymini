@@ -22,7 +22,7 @@ function uploadFace(filePath) {
                     return;
                 }
 
-                if (res.statusCode >= 200 && res.statusCode < 300 && data.code === 200) {
+                if (res.statusCode >= 200 && res.statusCode < 300 && (data.code === 0 || data.code === 200)) {
                     const url = data?.data?.url || data?.url;
                     if (!url) {
                         reject(new Error('上传成功但未返回图片地址'));

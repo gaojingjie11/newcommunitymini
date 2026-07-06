@@ -47,12 +47,13 @@ Page({
                 this.setData({ userInfo: user });
             }
 
-            const list = await getConversations();
+            const resList = await getConversations();
+            const list = resList?.list || resList || [];
             let activeId = '';
             if (list && list.length > 0) {
                 activeId = list[0].id;
             } else {
-                const res = await createConversation({ title: '小微信使' });
+                const res = await createConversation({ title: '新会话' });
                 activeId = res.id;
             }
 
@@ -63,6 +64,28 @@ Page({
             this.setData({ messages: [buildGreetingMessage()] });
         } finally {
             this.setData({ loading: false });
+        }
+    },
+
+    async handleNewSession() {
+        if (this.data.loading) return;
+        this.setData({ loading: true });
+        wx.showLoading({ title: '新建会话中...', mask: true });
+        try {
+            const res = await createConversation({ title: '新会话' });
+            const activeId = res.id;
+            this.setData({
+                conversationId: activeId,
+                messages: []
+            });
+            await this.loadHistory(activeId);
+            wx.showToast({ title: '已新建对话', icon: 'success' });
+        } catch (e) {
+            console.error(e);
+            wx.showToast({ title: '新建对话失败', icon: 'none' });
+        } finally {
+            this.setData({ loading: false });
+            wx.hideLoading();
         }
     },
 

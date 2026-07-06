@@ -39,7 +39,7 @@ function uploadGarbageImage(filePath) {
                     return;
                 }
 
-                if (res.statusCode >= 200 && res.statusCode < 300 && data.code === 200) {
+                if (res.statusCode >= 200 && res.statusCode < 300 && (data.code === 0 || data.code === 200)) {
                     resolve(data.data);
                     return;
                 }

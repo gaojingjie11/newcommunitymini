@@ -1,6 +1,9 @@
 <view class="chat-page page-shell">
   <view class="chat-header card">
-    <view class="chat-title">🤖 智享生活助手</view>
+    <view class="chat-title-row">
+      <view class="chat-title">🤖 智享生活助手</view>
+      <button class="new-chat-btn" size="mini" bindtap="handleNewSession">新对话</button>
+    </view>
     <view class="chat-desc">支持通知总结、报修投诉、商品下单与支付协助</view>
   </view>
 

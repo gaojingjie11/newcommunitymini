@@ -107,7 +107,7 @@ function uploadFaceImage(filePath) {
                     return;
                 }
 
-                if (res.statusCode >= 200 && res.statusCode < 300 && data.code === 200) {
+                if (res.statusCode >= 200 && res.statusCode < 300 && (data.code === 0 || data.code === 200)) {
                     const imageURL = data?.data?.url || data?.url || (typeof data?.data === 'string' ? data.data : '');
                     if (!imageURL) {
                         reject(new Error('上传成功但未返回图片地址'));
