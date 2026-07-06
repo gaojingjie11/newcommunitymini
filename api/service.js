@@ -134,6 +134,8 @@ module.exports = {
         return request({
             url: '/mall/stores',
             method: 'GET'
+        }).then(res => {
+            return res?.list || res || [];
         });
     }
 };
