@@ -70,16 +70,13 @@ Page({
 
         this.setData({ submitting: true });
 
-        // Construct items
-        const items = cartItems.map(item => ({
-            cart_id: item.id,
-            quantity: item.quantity
-        }));
+        // Extract cart IDs
+        const cartIds = cartItems.map(item => Number(item.id));
 
         try {
             await createOrder({
-                store_id: storeId,
-                items: items
+                store_id: Number(storeId),
+                cart_ids: cartIds
             });
 
             wx.showToast({ title: '下单成功' });
