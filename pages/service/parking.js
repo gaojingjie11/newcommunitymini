@@ -51,14 +51,26 @@ Page({
     },
 
     async handleBindConfirm() {
-        if (!this.data.plate_number) {
+        const plate = String(this.data.plate_number || '').trim().toUpperCase();
+        if (!plate) {
             wx.showToast({ title: '请输入车牌号', icon: 'none' });
+            return;
+        }
+
+        // Standard blue plate regex: 1 province abbreviation, 1 letter, and 5 alphanumeric chars
+        const regex = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼][A-Z][A-Z0-9]{5}$/;
+        if (!regex.test(plate)) {
+            wx.showToast({
+                title: '请输入正确的蓝色车牌号（如：粤A88888）',
+                icon: 'none',
+                duration: 2500
+            });
             return;
         }
 
         try {
             await bindCar({
-                car_plate: this.data.plate_number, // Backend expects car_plate
+                car_plate: plate, // Send the formatted uppercase plate
                 parking_id: Number(this.data.currentId) // Backend expects parking_id
             });
             wx.showToast({ title: '绑定成功', icon: 'success' });
