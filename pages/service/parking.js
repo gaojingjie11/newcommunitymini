@@ -63,7 +63,7 @@ Page({
             wx.showToast({
                 title: '请输入正确的蓝色车牌号（如：粤A88888）',
                 icon: 'none',
-                duration: 2500
+                duration: 1500
             });
             return;
         }
